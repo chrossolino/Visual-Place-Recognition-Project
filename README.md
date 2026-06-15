@@ -4,6 +4,14 @@
 **Davide Maietta, Valentina Romeo, Christian Rossolino, Davide Sisto**  
 Politecnico di Torino — Machine Learning Project (Extension 6.1)
 
+--- 
+
+## Data
+
+Dataset images, raw `.torch` feature files and Colab logs (too large for GitHub) are available on Google Drive:
+
+📁 [Progetto_Machine_Learning — Google Drive](https://drive.google.com/drive/folders/TUO_LINK_QUI)
+
 ---
 
 ## Overview
@@ -39,20 +47,6 @@ This project has two parts:
 Using a threshold F1-optimised on SF-XS validation:
 - MegaLoc skips **94–100%** of re-ranking with no accuracy cost.
 - NetVLAD+SuperPoint+LightGlue tracks full re-ranking within 1 R@1 point while skipping 8–49% of cost.
-
----
-
-## Features Used by the Gate
-
-| Feature | Type | Description |
-|---------|------|-------------|
-| `d1`, `d2` | Retrieval | Top-1 and top-2 descriptor distances |
-| `gap`, `relative_gap` | Retrieval | Absolute and relative margin between top-1 and top-2 |
-| `num_inliers` | Matching | RANSAC inliers between query and top-1 |
-| `inlier_ratio` | Matching | Inliers / total matches |
-| `clustered_score` | Matching | Σ√(cluster size) over DBSCAN clusters of inlier positions |
-
-The **FULL model** uses: `clustered_score`, `relative_gap`, `d1`, `num_inliers`.
 
 ---
 
