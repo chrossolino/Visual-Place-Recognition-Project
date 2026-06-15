@@ -1,0 +1,17 @@
+method,dataset,n_queries,t_extraction_s,t_retrieval_s,t_total_s,ms_per_query
+cosplace_resnet18_512,svox_sun,854,11.619,0.275,11.894,13.927
+cosplace_resnet18_512,svox_night,823,10.9798,0.2687,11.2486,13.668
+cosplace_resnet18_512,sf_xs,1000,14.1961,0.3275,14.5235,14.524
+cosplace_resnet18_512,tokyo_xs,315,6.7349,0.0696,6.8045,21.602
+megaloc_resnet50_4096,svox_sun,854,47.277,3.1251,50.4021,59.019
+megaloc_resnet50_4096,svox_night,823,47.2205,3.7873,51.0078,61.978
+megaloc_resnet50_4096,sf_xs,1000,53.4447,5.0453,58.4901,58.49
+megaloc_resnet50_4096,tokyo_xs,315,18.2104,0.8006,19.011,60.352
+mixvpr_resnet50_4096,svox_sun,854,12.4429,1.8763,14.3192,16.767
+mixvpr_resnet50_4096,svox_night,823,13.9592,1.2016,15.1608,18.421
+mixvpr_resnet50_4096,sf_xs,1000,12.9476,2.0044,14.9519,14.952
+mixvpr_resnet50_4096,tokyo_xs,315,5.7131,0.4092,6.1224,19.436
+netvlad_vgg16_4096,svox_sun,854,36.9534,1.2346,38.188,44.717
+netvlad_vgg16_4096,svox_night,823,37.1993,1.1879,38.3871,46.643
+netvlad_vgg16_4096,sf_xs,1000,42.8062,2.1044,44.9106,44.911
+netvlad_vgg16_4096,tokyo_xs,315,14.4082,0.3909,14.7992,46.981

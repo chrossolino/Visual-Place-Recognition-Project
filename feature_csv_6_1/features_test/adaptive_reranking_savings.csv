@@ -1,0 +1,17 @@
+method,matcher,dataset,R@1_retrieval,R@1_full_rerk,gain,breakeven_%,saving_%,threshold_P,n_queries
+megaloc,superpoint-lg,sun,96.4,96.0,-0.4,38.5,61.5,0.9973,854
+megaloc,superpoint-lg,night,95.7,90.3,-5.5,0.0,100.0,0.3117,823
+megaloc,superpoint-lg,sf_xs,86.5,86.6,0.1,1.2,98.8,0.4754,1000
+megaloc,superpoint-lg,tokyo_xs,94.6,94.3,-0.3,0.0,100.0,0.4928,315
+megaloc,superglue,sun,96.4,95.6,-0.8,55.9,44.1,0.9991,854
+megaloc,superglue,night,95.7,92.3,-3.4,0.0,100.0,0.3489,823
+megaloc,superglue,sf_xs,86.5,85.2,-1.3,0.0,100.0,0.42,1000
+megaloc,superglue,tokyo_xs,94.6,92.4,-2.2,0.0,100.0,0.583,315
+netvlad,superpoint-lg,sun,37.1,65.2,28.1,71.2,28.8,0.8955,854
+netvlad,superpoint-lg,night,8.5,24.3,15.8,88.2,11.8,0.0685,823
+netvlad,superpoint-lg,sf_xs,42.2,62.3,20.1,63.4,36.6,0.7362,1000
+netvlad,superpoint-lg,tokyo_xs,54.0,68.9,14.9,54.3,45.7,0.5871,315
+netvlad,superglue,sun,37.1,64.3,27.2,86.3,13.7,1.0,854
+netvlad,superglue,night,8.5,24.8,16.3,91.7,8.3,0.3198,823
+netvlad,superglue,sf_xs,42.2,60.8,18.6,75.4,24.6,0.5619,1000
+netvlad,superglue,tokyo_xs,54.0,67.0,13.0,61.0,39.0,0.2216,315
