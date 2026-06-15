@@ -1,82 +1,114 @@
-# Visual Place Recognition project
+# Are You Sure You Are in the Right Place?
+### Adaptive Re-ranking for Efficient and Reliable Visual Place Recognition
 
-This repository provides a starting code for the **Visual Place Recognition** project of the Advanced Machine Learning / Data analysis and Artificial Intelligence Course.
+**Davide Maietta, Valentina Romeo, Christian Rossolino, Davide Sisto**  
+Politecnico di Torino — Machine Learning Project (Extension 6.1)
 
-The following commands are meant to be run locally. If you plan to use Colab, upload the notebook [start_your_project.ipynb](./start_your_project.ipynb) and start from there.
+---
 
-> [!NOTE]  
-> ### About datasets format
-> The adopted convention is that the names of the files with the images are:
-> ```
-> @ UTM_easting @ UTM_northing @ UTM_zone_number @ UTM_zone_letter @ latitude @ longitude @ pano_id @ tile_num @ heading @ pitch @ roll @ height @ timestamp @ note @ extension
-> ```
-> Note that some of these values can be empty (e.g. the timestamp might be unknown), and the only required values are UTM coordinates (obtained from latitude and longitude).
+## Overview
 
-> [!WARNING]  
-> Some models require code implementation. You should identify which models require them, where they should be implemented, and then implement them.
+Visual Place Recognition (VPR) is commonly formulated as an image retrieval problem, where an optional re-ranking step verifies the top retrieved candidates using local image matching and RANSAC. Re-ranking can improve accuracy, but it is **one to two orders of magnitude more expensive** than retrieval — and, as we show, it can even hurt a strong retriever.
 
-## Install the repo
+This project has two parts:
 
-```sh
-git clone --recursive https://github.com/FarInHeight/Visual-Place-Recognition-Project.git
+1. **Benchmark** of four global descriptors combined with three local matchers on four test sets, reporting Recall@N and per-query timing.
+2. **Adaptive re-ranking**: a logistic regression gate that activates full geometric verification only when the top-1 retrieval is likely wrong, saving matching cost without sacrificing accuracy.
+
+---
+
+## Methods
+
+| Component | Options |
+|-----------|---------|
+| **Retrievers** | NetVLAD, CosPlace, MixVPR, MegaLoc |
+| **Matchers** | SuperGlue, SuperPoint+LightGlue, LoFTR |
+| **Datasets** | SVOX Sun, SVOX Night, SF-XS, Tokyo-XS |
+| **Metric** | Recall@N, τ = 25 m, K = 20 |
+
+---
+
+## Key Results
+
+### Adaptive gate (FULL model)
+- **NetVLAD**: recovers +13 to +28 R@1 gain from full re-ranking while skipping 8–46% of matching calls.
+- **MegaLoc**: avoids accuracy losses of up to 5.5 R@1 caused by blind re-ranking, skipping 44–100% of full top-20 re-ranking operations.
+- Correctness estimator reaches up to **0.99 AUROC**.
+
+### Fixed validation threshold
+Using a threshold F1-optimised on SF-XS validation:
+- MegaLoc skips **94–100%** of re-ranking with no accuracy cost.
+- NetVLAD+SuperPoint+LightGlue tracks full re-ranking within 1 R@1 point while skipping 8–49% of cost.
+
+---
+
+## Repository Structure
+
+```
+├── VPR-methods-evaluation/          # Retrieval + benchmark scripts
+├── image-matching-models/           # Submodule: local matchers
+├── vpr_uncertainty/                 # Uncertainty estimation utilities
+├── extension_6_1/
+│   ├── build_feature_csv_6_1_TEST.py        # Build feature CSVs for test split
+│   ├── build_reranked_correct_loop.py       # Build reranked_correct labels from .torch
+│   ├── adaptive_reranking_curve.py          # Sweep curve: R@1 vs % queries re-ranked
+│   ├── adaptive_recall_val_threshold.py     # Fixed val-threshold evaluation
+│   ├── plot_val_thr_svox_spl.py             # 2×2 bar plots (SVOX, SP+LG only)
+│   ├── report_latex/                        # Full LaTeX report source
+│   └── *.csv / *.png                        # Results and plots
+├── download_datasets.py
+├── reranking.py
+└── main.ipynb                       # Main Colab notebook
 ```
 
-## Install dependencies
+---
 
-```sh
-cd Visual-Place-Recognition-Project/image-matching-models
-pip install -e .[all]
-pip install faiss-cpu
+## Features Used by the Gate
+
+| Feature | Type | Description |
+|---------|------|-------------|
+| `d1`, `d2` | Retrieval | Top-1 and top-2 descriptor distances |
+| `gap`, `relative_gap` | Retrieval | Absolute and relative margin between top-1 and top-2 |
+| `num_inliers` | Matching | RANSAC inliers between query and top-1 |
+| `inlier_ratio` | Matching | Inliers / total matches |
+| `clustered_score` | Matching | Σ√(cluster size) over DBSCAN clusters of inlier positions |
+
+The **FULL model** uses: `clustered_score`, `relative_gap`, `d1`, `num_inliers`.
+
+---
+
+## Setup
+
+```python
+# In Colab — set your base directory
+BASE_DIR    = "/content/drive/MyDrive/Progetto_Machine_Learning"
+PROJECT_DIR = f"{BASE_DIR}/Visual-Place-Recognition-Project"
+FEAT_DIR    = f"{BASE_DIR}/feature_csv_6_1"
+RESULTS_DIR = f"{BASE_DIR}/results_6_1_alltests"
 ```
 
-## Download Datasets
-
-```sh
-cd ..
+Datasets can be downloaded with:
+```bash
 python download_datasets.py
 ```
 
-## Run VPR Evaluation
+Dependencies are installed automatically by the notebook setup cell.
 
-```sh
-python VPR-methods-evaluation/main.py \
---num_workers 8 \
---batch_size 32 \
---log_dir log_dir \
---method=cosplace --backbone=ResNet18 --descriptors_dimension=512 \
---image_size 512 512 \
---database_folder '<path-to-database-folder>' \
---queries_folder '<path-to-queries-folder>' \
---num_preds_to_save 20 \
---recall_values 1 5 10 20 \
---save_for_uncertainty
-```
+> **Note:** Dataset images (~9.7 GB) and raw `.torch` feature files are stored on Google Drive and are not included in this repository.
 
-## Run Image Matching on Retrieval Results
+---
 
-```sh
-python match_queries_preds.py \
---preds-dir '<path-to-predictions-folder>' \
---matcher 'superpoint-lg' \
---device 'cuda' \
---num-preds 20
-```
+## Report
 
-## Check Re-ranking Performance
+The full report is available in `extension_6_1/report_latex/`. It follows the CVPR 2026 two-column format.
 
-```sh
-python reranking.py \
---preds-dir '<path-to-predictions-folder>' \
---inliers-dir '<path-to-inliers-folder>' \
---num-preds 20 \
---recall-values 1 5 10 20
-```
+---
 
-## Perform Uncertainty Evalutation [only for AML students]
+## Authors
 
-```sh
-python -m vpr_uncertainty.eval \
---preds-dir '<path-to-predictions-folder>' \
---inliers-dir '<path-to-inliers-folder>' \
---z-data-path '<path-to-z-data-file>'
-```
+| Name | Email |
+|------|-------|
+| Davide Maietta | s354172@studenti.polito.it |
+| Valentina Romeo | s353850@studenti.polito.it |
+| Christian Rossolino | s363405@studenti.polito.it |
+| Davide Sisto | s360589@studenti.polito.it |
