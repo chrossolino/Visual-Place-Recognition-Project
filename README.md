@@ -42,27 +42,6 @@ Using a threshold F1-optimised on SF-XS validation:
 
 ---
 
-## Repository Structure
-
-```
-├── VPR-methods-evaluation/          # Retrieval + benchmark scripts
-├── image-matching-models/           # Submodule: local matchers
-├── vpr_uncertainty/                 # Uncertainty estimation utilities
-├── extension_6_1/
-│   ├── build_feature_csv_6_1_TEST.py        # Build feature CSVs for test split
-│   ├── build_reranked_correct_loop.py       # Build reranked_correct labels from .torch
-│   ├── adaptive_reranking_curve.py          # Sweep curve: R@1 vs % queries re-ranked
-│   ├── adaptive_recall_val_threshold.py     # Fixed val-threshold evaluation
-│   ├── plot_val_thr_svox_spl.py             # 2×2 bar plots (SVOX, SP+LG only)
-│   ├── report_latex/                        # Full LaTeX report source
-│   └── *.csv / *.png                        # Results and plots
-├── download_datasets.py
-├── reranking.py
-└── main.ipynb                       # Main Colab notebook
-```
-
----
-
 ## Features Used by the Gate
 
 | Feature | Type | Description |
@@ -94,13 +73,7 @@ python download_datasets.py
 
 Dependencies are installed automatically by the notebook setup cell.
 
-> **Note:** Dataset images (~9.7 GB) and raw `.torch` feature files are stored on Google Drive and are not included in this repository.
-
----
-
-## Report
-
-The full report is available in `extension_6_1/report_latex/`. It follows the CVPR 2026 two-column format.
+> **Note:** Dataset images (~9.7 GB) and raw `.torch` log/feature files (~25 GB) are stored on Google Drive and are not included in this repository.
 
 ---
 
