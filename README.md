@@ -10,7 +10,7 @@ Politecnico di Torino — Machine Learning Project (Extension 6.1)
 
 Dataset images, raw `.torch` feature files and Colab logs (too large for GitHub) are available on Google Drive:
 
-📁 [Progetto_Machine_Learning — Google Drive](https://drive.google.com/drive/folders/TUO_LINK_QUI)
+📁 [Progetto_Machine_Learning — Google Drive](https://drive.google.com/drive/folders/1sNCZabQyeQ6JKeZVdieFE3Jy9JBtb7U6?usp=share_link)
 
 ---
 
